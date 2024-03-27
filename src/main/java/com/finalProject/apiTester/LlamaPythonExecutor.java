@@ -13,29 +13,26 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PythonExecutor {
-    public static void main(String[] args) {
+public class LlamaPythonExecutor {
 
-    }
-
-    public static String execute(String code, ArrayList<String> lineToCover, String assistant) {
+    public static String execute(String code, ArrayList<String> lineToCover) {
         try {
             // Convert your arguments into a JSON string
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> data = new HashMap<>();
             data.put("code_msg", createPrompt(code, lineToCover)); // Assuming createPrompt returns a string
-            data.put("assistant_name", assistant);
 
             String requestBody = objectMapper.writeValueAsString(data);
 
             // Create the HttpClient
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:5000/generate_response"))
+                    .uri(URI.create("http://localhost:5000/generate_llama_response"))
 //                    .uri(URI.create("http://localhost:5000/generate_response"))
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .header("Content-Type", "application/json")
                     .build();
+
             // Send the request
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -43,42 +40,32 @@ public class PythonExecutor {
             if (response.statusCode() == 200) {
                 // Parse the JSON response body to extract the "response" field
                 Map<String,Object> responseMap = objectMapper.readValue(response.body(), Map.class);
-                String responseBody = (String) responseMap.get("response");
-
-                // Here you can process the responseBody further if needed
-                System.out.println(responseBody);
-                String tests =extractContent(responseBody);
-//                if(tests != null){
-//                    tests = formatJavaCode(tests);
-//                }
-                System.out.println(tests);
-                return tests;
+                return (String) responseMap.get("response");
             } else {
                 // Handle non-200 responses
                 System.err.println("API request failed with status code: " + response.statusCode());
-                return null;
+                return "error";
             }
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            return "error";
+            return null;
         }
     }
 
-    public static String passError(String errorMessage,String code, String assistant) {
+    public static String passError(String errorMessage,String code) {
         try {
             // Convert your arguments into a JSON string
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> data = new HashMap<>();
             data.put("prompt", createErrorPrompt(errorMessage, code)); // Assuming createPrompt returns a string
-            data.put("assistant_name", assistant); //RetryAssistant
 
             String requestBody = objectMapper.writeValueAsString(data);
 
             // Create the HttpClient
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:5000/generate_response"))
+                    .uri(URI.create("http://localhost:5000/generate_llama_error_response"))
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .header("Content-Type", "application/json")
                     .build();
@@ -94,13 +81,11 @@ public class PythonExecutor {
 
                 // Here you can process the responseBody further if needed
                 System.out.println(responseBody);
-                String tests =extractContent(responseBody);
-                System.out.println(tests);
-                return tests;
+                return responseBody;
             } else {
                 // Handle non-200 responses
                 System.err.println("API request failed with status code: " + response.statusCode());
-                return null;
+                return "error";
             }
 
         } catch (IOException | InterruptedException e) {
@@ -117,21 +102,6 @@ public class PythonExecutor {
         return prompt;
     }
 
-    public static String extractContent(String input) {
-        // This pattern matches content between ```java and ```, capturing the content in between
-        Pattern pattern = Pattern.compile("```java(.*?)```", Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(input);
-
-        // Check if the pattern is found
-        if (matcher.find()) {
-            // Return the content between the delimiters
-            return matcher.group(1).trim(); // .trim() to remove leading and trailing whitespaces
-        }
-
-        // Return null or an appropriate response if no match is found
-        return null;
-    }
-
     public static String createPrompt(String code, ArrayList<String> lineToCover){
         String prompt = "The code below is missing test coverage for the following lines: ";
         for(String line: lineToCover){
@@ -143,28 +113,4 @@ public class PythonExecutor {
         return prompt;
     }
 
-    public static String formatJavaCode(String input) {
-        // Step 1: Basic replacements for new lines and spaces
-        String formatted = input
-                .replace(";", ";\n") // New line after semicolon
-                .replaceAll("\\{", "{\n") // New line after opening brace
-                .replaceAll("\\}", "\n}\n") // New line before closing brace
-//                .replaceAll("package ", "\npackage ") // New line before package
-                .replaceAll("import ", "\nimport ") // New line before import
-                .replace("public", "\npublic") // New line before public
-                .replace("private", "\nprivate") // New line before private
-                .replace("@Test", "\n@Test"); // New line before if
-        // Step 2: Adding indentation
-        int indentLevel = 0;
-        StringBuilder indented = new StringBuilder();
-        for (String line : formatted.split("\n")) {
-            if (line.contains("}")) indentLevel--; // Decrease indent before closing brace
-            char[] indent = new char[indentLevel * 4]; // Assuming 4 spaces per indent level
-            java.util.Arrays.fill(indent, ' ');
-            indented.append(indent).append(line.trim()).append("\n");
-            if (line.contains("{")) indentLevel++; // Increase indent after opening brace
-        }
-
-        return indented.toString();
-    }
 }

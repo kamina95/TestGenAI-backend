@@ -4,6 +4,8 @@ import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class XMLParser {
 
@@ -38,17 +40,6 @@ public class XMLParser {
                             // Extract information from the <line> element
                             String lineNumber = lineElement.getAttribute("nr");
                             String instructionMissed = lineElement.getAttribute("mi");
-//                            String instructionCovered = lineElement.getAttribute("ci");
-//                            String branchMissed = lineElement.getAttribute("mb");
-//                            String branchCovered = lineElement.getAttribute("cb");
-
-//                            System.out.println("Line Number: " + lineNumber);
-//                            System.out.println("Instruction Missed: " + instructionMissed);
-//                            System.out.println("Instruction Covered: " + instructionCovered);
-//                            System.out.println("Branch Missed: " + branchMissed);
-//                            System.out.println("Branch Covered: " + branchCovered);
-//                            System.out.println("---------------------");
-
                             if(!instructionMissed.equals("0")){
                                 linesNotCovered.add(lineNumber);
                             }
@@ -56,12 +47,44 @@ public class XMLParser {
                     }
                 }
             }
-
             return linesNotCovered;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void writeCoveragePercentagesToFile() {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(new File("C:\\Users\\Antonio\\Downloads\\apiTester\\target\\site\\jacoco\\jacoco.xml"));
+
+            NodeList counterList = document.getElementsByTagName("counter");
+            Map<String, Double> coveragePercentages = new HashMap<>();
+            for (int i = 0; i < counterList.getLength(); i++) {
+                Node counterNode = counterList.item(i);
+                if (counterNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element counterElement = (Element) counterNode;
+                    String type = counterElement.getAttribute("type");
+                    int covered = Integer.parseInt(counterElement.getAttribute("covered"));
+                    int missed = Integer.parseInt(counterElement.getAttribute("missed"));
+                    double percentage = (double) covered / (covered + missed) * 100;
+                    coveragePercentages.put(type, percentage);
+                }
+            }
+            String outputPath = "C:\\Users\\Antonio\\Downloads\\apiTester\\coveragePercentages.txt";
+            // Write coverage percentages to file
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath))) {
+                for (Map.Entry<String, Double> entry : coveragePercentages.entrySet()) {
+                    writer.write(entry.getKey() + " Coverage: " + entry.getValue() + "%\n");
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

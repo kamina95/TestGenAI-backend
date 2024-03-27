@@ -1,0 +1,6 @@
+BRANCH Coverage: 50.0%
+INSTRUCTION Coverage: 68.57142857142857%
+LINE Coverage: 60.0%
+COMPLEXITY Coverage: 12.5%
+METHOD Coverage: 50.0%
+CLASS Coverage: 100.0%

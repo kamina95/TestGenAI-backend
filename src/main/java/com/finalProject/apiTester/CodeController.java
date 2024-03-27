@@ -8,12 +8,22 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api")
 public class CodeController {
-    @PostMapping("/submit")
+    @PostMapping("/submit_gpt")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<String> submitCode(@RequestBody CodeSubmission submission) throws IOException {
+    public ResponseEntity<String> submitCode(@RequestBody CodeSubmission submission) {
         // Placeholder: process the code, run JaCoCo, call OpenAI API
         System.out.println(submission.toString());
         String response = CompileCode.startCompile(submission);
+        System.out.println(response);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/submit_llama")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<String> submitCodeLlama(@RequestBody CodeSubmission submission) {
+        // Placeholder: process the code, run JaCoCo, call OpenAI API
+        System.out.println(submission.toString());
+        String response = LlamaCompile.startCompile(submission);
         return ResponseEntity.ok(response);
     }
 }

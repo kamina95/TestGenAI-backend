@@ -1,5 +1,6 @@
 package com.finalProject.apiTester;
 
+import javax.tools.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -8,11 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-
-import static com.finalProject.apiTester.PythonExecutor.passError;
-import static com.finalProject.apiTester.XMLParser.writeCoveragePercentagesToFile;
-
-public class CompileCode {
+public class LlamaCompile {
 
     private static String classCode;
     private static String testCode;
@@ -24,16 +21,14 @@ public class CompileCode {
         testCode = codeSubmission.getTests();
         String response = tryCompileCode();
         if(response.equals("success")){
-
-            System.out.println("calling python");
-            return callPython("FirstAssistant");
+            return callPython();
         }else {
             int count = 1;
             while(response.equals("error") && count < 3){
                 System.out.println("retrying..." + count );
                 System.out.println(errorMessage);
                 count++;
-                String newTests = passError(errorMessage, classCode, "RetryAssistant");
+                String newTests = LlamaPythonExecutor.passError(errorMessage, classCode);
                 response = tryCompileCode();
                 if(response.equals("success")){
                     return newTests;
@@ -44,12 +39,13 @@ public class CompileCode {
         return "error";
     }
 
+
     public static String tryCompileCode() {
         try{
             writeCodeToFile(getClassName(classCode), classCode);
             writeTestToFile(getClassName(testCode), testCode);
-//            ProcessBuilder testBuilder = new ProcessBuilder("C:\\Program Files\\apache-maven-3.9.5\\bin\\mvn.cmd", "test", "-Dtest=" + getClassName(testCode));
             ProcessBuilder testBuilder = new ProcessBuilder("C:\\Program Files\\apache-maven-3.9.5\\bin\\mvn.cmd", "test");
+//            ProcessBuilder testBuilder = new ProcessBuilder("C:\\Program Files\\apache-maven-3.9.5\\bin\\mvn.cmd", "test", "-Dtest=" + getClassName(testCode));
             testBuilder.redirectErrorStream(true); // Merge error output with standard output
             Process testProcess = testBuilder.start();
 
@@ -80,13 +76,12 @@ public class CompileCode {
 
     }
 
-    public static String callPython(String assistantName){
+    public static String callPython(){
         ArrayList<String> linesNotCovered = XMLParser.parseXML();
-        writeCoveragePercentagesToFile();
         for(String line: linesNotCovered){
             System.out.println(line);
         }
-        return PythonExecutor.execute(classCode, linesNotCovered, assistantName);
+        return LlamaPythonExecutor.execute(classCode, linesNotCovered);
     }
 
 
