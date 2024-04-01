@@ -8,7 +8,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import static com.finalProject.apiTester.CoverageComparisonWriter.getClassNameFromXML;
 import static com.finalProject.apiTester.PythonExecutor.passError;
 import static com.finalProject.apiTester.XMLParser.writeCoveragePercentagesToFile;
 
@@ -23,22 +26,33 @@ public class CompileCode {
         classCode = codeSubmission.getCode();
         testCode = codeSubmission.getTests();
         String response = tryCompileCode();
+        Map<String, Double> initialcoveragePercentages = writeCoveragePercentagesToFile();
         if(response.equals("success")){
-
+            String className = getClassNameFromXML();
             System.out.println("calling python");
-            return callPython("FirstAssistant");
-        }else {
-            int count = 1;
-            while(response.equals("error") && count < 3){
-                System.out.println("retrying..." + count );
-                System.out.println(errorMessage);
-                count++;
-                String newTests = passError(errorMessage, classCode, "RetryAssistant");
-                response = tryCompileCode();
-                if(response.equals("success")){
-                    return newTests;
+            callPython("FirstAssistant");
+            response = tryCompileCode();
+            if(response.equals("success")){
+                Map<String, Double> generatedCoveragePercentages = writeCoveragePercentagesToFile();
+                assert initialcoveragePercentages != null;
+                CoverageComparisonWriter.appendCoverageComparisonToFile(initialcoveragePercentages, generatedCoveragePercentages);
+                CoverageComparisonWriter.appendCoverageComparisonToCSVFile(initialcoveragePercentages, generatedCoveragePercentages, className);
+                return testCode;
+            }else {
+                int count = 1;
+                while(response.equals("error") && count < 3){
+                    System.out.println("retrying..." + count );
+                    System.out.println(errorMessage);
+                    count++;
+                    String newTests = passError(errorMessage, classCode, "RetryAssistant");
+                    response = tryCompileCode();
+                    if(response.equals("success")){
+                        return newTests;
+                    }
                 }
             }
+        }else{
+            return "The code below has an error: " + errorMessage + "\n\nSolve the error from this code:\n\n" + classCode;
         }
 
         return "error";
@@ -80,13 +94,19 @@ public class CompileCode {
 
     }
 
-    public static String callPython(String assistantName){
+    public static void callPython(String assistantName){
         ArrayList<String> linesNotCovered = XMLParser.parseXML();
         writeCoveragePercentagesToFile();
         for(String line: linesNotCovered){
             System.out.println(line);
         }
-        return PythonExecutor.execute(classCode, linesNotCovered, assistantName);
+        testCode =  PythonExecutor.execute(classCode, linesNotCovered, assistantName);
+        try {
+            assert testCode != null;
+            writeTestToFile(getClassName(testCode), testCode);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -133,6 +153,32 @@ public class CompileCode {
         Path filePath = directory.resolve(fileName+".java");
         Files.write(filePath, code.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         return filePath.toFile();
+    }
+
+    public static void deleteTempFiles(String pathToDirectory){
+        File directory = new File(pathToDirectory);
+        File[] files = directory.listFiles(); // This lists all files in the directory
+
+        if (files != null) { // Make sure the directory is not empty
+            for (File file : files) {
+                if (file.delete()) {
+                    System.out.println(file.getName() + " was deleted successfully.");
+                } else {
+                    System.out.println("Failed to delete " + file.getName());
+                }
+            }
+        }
+
+    }
+    public static void cleanAllFiles(){
+        deleteTempFiles("C:\\Users\\Antonio\\Downloads\\apiTester\\src\\main\\java\\temp");
+        deleteTempFiles("C:\\Users\\Antonio\\Downloads\\apiTester\\src\\test\\java\\temp");
+        try {
+            new ProcessBuilder("C:\\Program Files\\apache-maven-3.9.5\\bin\\mvn.cmd", "clean").start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

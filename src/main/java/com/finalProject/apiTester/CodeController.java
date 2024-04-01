@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+import static com.finalProject.apiTester.CompileCode.cleanAllFiles;
+
 @RestController
 @RequestMapping("/api")
 public class CodeController {
@@ -15,6 +17,7 @@ public class CodeController {
         System.out.println(submission.toString());
         String response = CompileCode.startCompile(submission);
         System.out.println(response);
+        cleanAllFiles();
         return ResponseEntity.ok(response);
     }
 
@@ -24,6 +27,7 @@ public class CodeController {
         // Placeholder: process the code, run JaCoCo, call OpenAI API
         System.out.println(submission.toString());
         String response = LlamaCompile.startCompile(submission);
+        cleanAllFiles();
         return ResponseEntity.ok(response);
     }
 }

@@ -46,7 +46,6 @@ public class PythonExecutor {
                 String responseBody = (String) responseMap.get("response");
 
                 // Here you can process the responseBody further if needed
-                System.out.println(responseBody);
                 String tests =extractContent(responseBody);
 //                if(tests != null){
 //                    tests = formatJavaCode(tests);

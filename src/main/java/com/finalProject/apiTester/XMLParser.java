@@ -55,8 +55,9 @@ public class XMLParser {
         return null;
     }
 
-    public static void writeCoveragePercentagesToFile() {
+    public static Map<String, Double> writeCoveragePercentagesToFile() {
         try {
+
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -75,16 +76,15 @@ public class XMLParser {
                     coveragePercentages.put(type, percentage);
                 }
             }
-            String outputPath = "C:\\Users\\Antonio\\Downloads\\apiTester\\coveragePercentages.txt";
-            // Write coverage percentages to file
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath))) {
-                for (Map.Entry<String, Double> entry : coveragePercentages.entrySet()) {
-                    writer.write(entry.getKey() + " Coverage: " + entry.getValue() + "%\n");
-                }
-            }
+
+            return coveragePercentages;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return null;
     }
+
+
 }

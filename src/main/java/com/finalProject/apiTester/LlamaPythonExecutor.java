@@ -40,7 +40,10 @@ public class LlamaPythonExecutor {
             if (response.statusCode() == 200) {
                 // Parse the JSON response body to extract the "response" field
                 Map<String,Object> responseMap = objectMapper.readValue(response.body(), Map.class);
-                return (String) responseMap.get("response");
+                String responseBody =  (String) responseMap.get("response");
+                String tests =extractContent(responseBody);
+                System.out.println(tests);
+                return tests;
             } else {
                 // Handle non-200 responses
                 System.err.println("API request failed with status code: " + response.statusCode());
@@ -111,6 +114,21 @@ public class LlamaPythonExecutor {
         prompt += "\n\n" + code;
         System.out.println(prompt);
         return prompt;
+    }
+
+    public static String extractContent(String input) {
+        // This pattern matches content between ```java and ```, capturing the content in between
+        Pattern pattern = Pattern.compile("```java(.*?)```", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(input);
+
+        // Check if the pattern is found
+        if (matcher.find()) {
+            // Return the content between the delimiters
+            return matcher.group(1).trim(); // .trim() to remove leading and trailing whitespaces
+        }
+
+        // Return null or an appropriate response if no match is found
+        return null;
     }
 
 }

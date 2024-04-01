@@ -9,6 +9,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Map;
+
+import static com.finalProject.apiTester.CoverageComparisonWriter.getClassNameFromXML;
+import static com.finalProject.apiTester.XMLParser.writeCoveragePercentagesToFile;
+
 public class LlamaCompile {
 
     private static String classCode;
@@ -20,20 +25,34 @@ public class LlamaCompile {
         classCode = codeSubmission.getCode();
         testCode = codeSubmission.getTests();
         String response = tryCompileCode();
-        if(response.equals("success")){
-            return callPython();
-        }else {
-            int count = 1;
-            while(response.equals("error") && count < 3){
-                System.out.println("retrying..." + count );
-                System.out.println(errorMessage);
-                count++;
-                String newTests = LlamaPythonExecutor.passError(errorMessage, classCode);
-                response = tryCompileCode();
-                if(response.equals("success")){
-                    return newTests;
+        Map<String, Double> initialcoveragePercentages = writeCoveragePercentagesToFile();
+
+        if(response.equals("success")) {
+            String className = getClassNameFromXML();
+            System.out.println("calling python");
+            callPython();
+            response = tryCompileCode();
+            if (response.equals("success")) {
+                Map<String, Double> generatedCoveragePercentages = writeCoveragePercentagesToFile();
+                assert initialcoveragePercentages != null;
+                CoverageComparisonWriter.appendCoverageComparisonToFile(initialcoveragePercentages, generatedCoveragePercentages);
+                CoverageComparisonWriter.appendCoverageComparisonToCSVFile(initialcoveragePercentages, generatedCoveragePercentages, className);
+                return testCode;
+            } else {
+                int count = 1;
+                while (response.equals("error") && count < 3) {
+                    System.out.println("retrying..." + count);
+                    System.out.println(errorMessage);
+                    count++;
+                    String newTests = LlamaPythonExecutor.passError(errorMessage, classCode);
+                    response = tryCompileCode();
+                    if (response.equals("success")) {
+                        return newTests;
+                    }
                 }
             }
+        } else {
+            return "The code below has an error: " + errorMessage + "\n\nSolve the error from this code:\n\n" + classCode;
         }
 
         return "error";
@@ -76,12 +95,18 @@ public class LlamaCompile {
 
     }
 
-    public static String callPython(){
+    public static void callPython(){
         ArrayList<String> linesNotCovered = XMLParser.parseXML();
         for(String line: linesNotCovered){
             System.out.println(line);
         }
-        return LlamaPythonExecutor.execute(classCode, linesNotCovered);
+        testCode = LlamaPythonExecutor.execute(classCode, linesNotCovered);
+        try {
+            assert testCode != null;
+            writeTestToFile(getClassName(testCode), testCode);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
