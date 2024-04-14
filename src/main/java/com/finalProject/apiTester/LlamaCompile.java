@@ -1,6 +1,5 @@
 package com.finalProject.apiTester;
 
-import javax.tools.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static com.finalProject.apiTester.CoverageComparisonWriter.getClassNameFromXML;
-import static com.finalProject.apiTester.XMLParser.writeCoveragePercentagesToFile;
+import static com.finalProject.apiTester.XMLParser.getCoveragePercentage;
 
 public class LlamaCompile {
 
@@ -25,7 +24,7 @@ public class LlamaCompile {
         classCode = codeSubmission.getCode();
         testCode = codeSubmission.getTests();
         String response = tryCompileCode();
-        Map<String, Double> initialcoveragePercentages = writeCoveragePercentagesToFile();
+        Map<String, Double> initialcoveragePercentages = getCoveragePercentage();
 
         if(response.equals("success")) {
             String className = getClassNameFromXML();
@@ -33,10 +32,10 @@ public class LlamaCompile {
             callPython();
             response = tryCompileCode();
             if (response.equals("success")) {
-                Map<String, Double> generatedCoveragePercentages = writeCoveragePercentagesToFile();
+                Map<String, Double> generatedCoveragePercentages = getCoveragePercentage();
                 assert initialcoveragePercentages != null;
                 CoverageComparisonWriter.appendCoverageComparisonToFile(initialcoveragePercentages, generatedCoveragePercentages);
-                CoverageComparisonWriter.appendCoverageComparisonToCSVFile(initialcoveragePercentages, generatedCoveragePercentages, className);
+                CoverageComparisonWriter.appendCoverageComparisonToCSVFile(initialcoveragePercentages, generatedCoveragePercentages, className, "Llama");
                 return testCode;
             } else {
                 int count = 1;

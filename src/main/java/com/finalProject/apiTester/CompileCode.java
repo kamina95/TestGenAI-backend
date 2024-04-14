@@ -8,12 +8,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import static com.finalProject.apiTester.CoverageComparisonWriter.getClassNameFromXML;
 import static com.finalProject.apiTester.PythonExecutor.passError;
-import static com.finalProject.apiTester.XMLParser.writeCoveragePercentagesToFile;
+import static com.finalProject.apiTester.XMLParser.getCoveragePercentage;
 
 public class CompileCode {
 
@@ -26,19 +25,20 @@ public class CompileCode {
         classCode = codeSubmission.getCode();
         testCode = codeSubmission.getTests();
         String response = tryCompileCode();
-        Map<String, Double> initialcoveragePercentages = writeCoveragePercentagesToFile();
+        Map<String, Double> initialcoveragePercentages = getCoveragePercentage();
         if(response.equals("success")){
             String className = getClassNameFromXML();
             System.out.println("calling python");
             callPython("FirstAssistant");
             response = tryCompileCode();
             if(response.equals("success")){
-                Map<String, Double> generatedCoveragePercentages = writeCoveragePercentagesToFile();
+                Map<String, Double> generatedCoveragePercentages = getCoveragePercentage();
                 assert initialcoveragePercentages != null;
                 CoverageComparisonWriter.appendCoverageComparisonToFile(initialcoveragePercentages, generatedCoveragePercentages);
-                CoverageComparisonWriter.appendCoverageComparisonToCSVFile(initialcoveragePercentages, generatedCoveragePercentages, className);
+                CoverageComparisonWriter.appendCoverageComparisonToCSVFile(initialcoveragePercentages, generatedCoveragePercentages, className, "GPT-4");
                 return testCode;
             }else {
+                System.out.println("error");
                 int count = 1;
                 while(response.equals("error") && count < 3){
                     System.out.println("retrying..." + count );
@@ -47,9 +47,12 @@ public class CompileCode {
                     String newTests = passError(errorMessage, classCode, "RetryAssistant");
                     response = tryCompileCode();
                     if(response.equals("success")){
+                        Map<String, Double> generatedCoveragePercentages = getCoveragePercentage();
+                        CoverageComparisonWriter.appendCoverageComparisonToCSVFile(initialcoveragePercentages, generatedCoveragePercentages, className, "GPT-4");
                         return newTests;
                     }
                 }
+//                CoverageComparisonWriter.appendErrorMessageToCsv(response, className,"GPT-4");
             }
         }else{
             return "The code below has an error: " + errorMessage + "\n\nSolve the error from this code:\n\n" + classCode;
@@ -82,6 +85,7 @@ public class CompileCode {
                 System.out.println("retrying...");
                 System.out.println(output); // Print the output for debugging
                 errorMessage = output.toString();
+//                return determineErrorType(errorMessage);
                 return "error";
             } else {
                 System.out.println("Tests passed successfully.");
@@ -94,9 +98,48 @@ public class CompileCode {
 
     }
 
+
+    private static String determineErrorType(String output) {
+        if (output.contains("COMPILATION ERROR")) {
+            return "CompilationError";
+        } else if (output.contains("There are test failures")) {
+            return "TestsFailedError";
+        } else if (output.contains("Could not find or load main class")) {
+            return "ClassNotFoundError";
+        } else if (output.contains("BUILD FAILURE")) {
+            return "BuildFailureError";
+        } else if (output.contains("Failed to execute goal")) {
+            if (output.contains("SurefireReport")) {
+                return "SurefireReportError";
+            }
+            return "ExecutionGoalFailure";
+        } else if (output.contains("Non-resolvable parent POM")) {
+            return "ParentPomNotFoundError";
+        } else if (output.contains("Plugin execution not covered by lifecycle configuration")) {
+            return "LifecycleConfigurationError";
+        } else if (output.contains("Project dependencies could not be resolved")) {
+            return "DependenciesResolutionError";
+        } else if (output.contains("No tests were executed")) {
+            return "NoTestsExecutedError";
+        } else if (output.contains("The forked VM terminated without saying properly goodbye")) {
+            return "VMCrashError";
+        } else if (output.contains("NullPointerException")) {
+            return "NullPointerException";
+        } else if (output.contains("ArrayIndexOutOfBoundsException")) {
+            return "ArrayIndexOutOfBoundsException";
+        } else if (output.contains("IllegalArgumentException")) {
+            return "IllegalArgumentException";
+        } else if (output.contains("RuntimeException")) {
+            return "RuntimeExceptionError";
+        } else {
+            return "UnknownError";
+        }
+    }
+
+
     public static void callPython(String assistantName){
         ArrayList<String> linesNotCovered = XMLParser.parseXML();
-        writeCoveragePercentagesToFile();
+        getCoveragePercentage();
         for(String line: linesNotCovered){
             System.out.println(line);
         }

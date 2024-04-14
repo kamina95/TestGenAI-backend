@@ -61,7 +61,7 @@ public class LlamaPythonExecutor {
             // Convert your arguments into a JSON string
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> data = new HashMap<>();
-            data.put("prompt", createErrorPrompt(errorMessage, code)); // Assuming createPrompt returns a string
+            data.put("code_msg", createErrorPrompt(errorMessage, code)); // Assuming createPrompt returns a string
 
             String requestBody = objectMapper.writeValueAsString(data);
 

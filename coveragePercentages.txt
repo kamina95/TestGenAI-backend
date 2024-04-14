@@ -68,3 +68,262 @@ LINE            90.00                90.00                0.00
 COMPLEXITY      50.00                87.50                37.50      
 METHOD          50.00                50.00                0.00       
 CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                100.00               50.00      
+INSTRUCTION     68.57                91.43                22.86      
+LINE            60.00                90.00                30.00      
+COMPLEXITY      12.50                87.50                75.00      
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                75.00                25.00      
+INSTRUCTION     68.57                91.43                22.86      
+LINE            60.00                90.00                30.00      
+COMPLEXITY      12.50                50.00                37.50      
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                91.67                41.67      
+INSTRUCTION     68.57                91.43                22.86      
+LINE            60.00                90.00                30.00      
+COMPLEXITY      12.50                75.00                62.50      
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                50.00                0.00       
+INSTRUCTION     68.57                68.57                0.00       
+LINE            60.00                60.00                0.00       
+COMPLEXITY      12.50                12.50                0.00       
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                50.00                0.00       
+INSTRUCTION     68.57                68.57                0.00       
+LINE            60.00                60.00                0.00       
+COMPLEXITY      12.50                12.50                0.00       
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                50.00                0.00       
+INSTRUCTION     68.57                68.57                0.00       
+LINE            60.00                60.00                0.00       
+COMPLEXITY      12.50                12.50                0.00       
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                100.00               50.00      
+INSTRUCTION     68.57                91.43                22.86      
+LINE            60.00                90.00                30.00      
+COMPLEXITY      12.50                87.50                75.00      
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          100.00               100.00               0.00       
+INSTRUCTION     74.29                74.29                0.00       
+LINE            70.00                70.00                0.00       
+COMPLEXITY      57.14                57.14                0.00       
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          75.00                100.00               25.00      
+INSTRUCTION     80.56                80.56                0.00       
+LINE            62.50                62.50                0.00       
+COMPLEXITY      57.14                71.43                14.29      
+METHOD          60.00                60.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          0.00                 0.00                 0.00       
+INSTRUCTION     0.00                 0.00                 0.00       
+LINE            0.00                 0.00                 0.00       
+COMPLEXITY      0.00                 0.00                 0.00       
+METHOD          0.00                 0.00                 0.00       
+CLASS           0.00                 0.00                 0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                100.00               50.00      
+INSTRUCTION     68.57                91.43                22.86      
+LINE            60.00                90.00                30.00      
+COMPLEXITY      12.50                87.50                75.00      
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                100.00               50.00      
+INSTRUCTION     68.57                91.43                22.86      
+LINE            60.00                90.00                30.00      
+COMPLEXITY      12.50                87.50                75.00      
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          0.00                 0.70                 0.70       
+INSTRUCTION     0.00                 12.31                12.31      
+LINE            0.00                 4.37                 4.37       
+COMPLEXITY      0.00                 1.05                 1.05       
+METHOD          0.00                 4.55                 4.55       
+CLASS           0.00                 100.00               100.00     
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                100.00               50.00      
+INSTRUCTION     68.57                91.43                22.86      
+LINE            60.00                90.00                30.00      
+COMPLEXITY      12.50                87.50                75.00      
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                75.00                25.00      
+INSTRUCTION     68.57                91.43                22.86      
+LINE            60.00                90.00                30.00      
+COMPLEXITY      12.50                50.00                37.50      
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          100.00               100.00               0.00       
+INSTRUCTION     74.29                74.29                0.00       
+LINE            70.00                70.00                0.00       
+COMPLEXITY      57.14                57.14                0.00       
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          75.00                100.00               25.00      
+INSTRUCTION     80.56                80.56                0.00       
+LINE            62.50                62.50                0.00       
+COMPLEXITY      57.14                71.43                14.29      
+METHOD          60.00                60.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          37.50                75.00                37.50      
+INSTRUCTION     57.14                71.43                14.29      
+LINE            56.25                75.00                18.75      
+COMPLEXITY      40.00                70.00                30.00      
+METHOD          66.67                83.33                16.67      
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                75.00                25.00      
+INSTRUCTION     82.50                87.50                5.00       
+LINE            77.78                88.89                11.11      
+COMPLEXITY      57.14                71.43                14.29      
+METHOD          80.00                80.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          80.00                80.00                0.00       
+INSTRUCTION     88.61                88.61                0.00       
+LINE            93.33                93.33                0.00       
+COMPLEXITY      70.00                70.00                0.00       
+METHOD          80.00                80.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                50.00                0.00       
+INSTRUCTION     78.48                78.48                0.00       
+LINE            72.22                72.22                0.00       
+COMPLEXITY      38.46                38.46                0.00       
+METHOD          83.33                83.33                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          41.67                41.67                0.00       
+INSTRUCTION     84.47                84.47                0.00       
+LINE            88.57                88.57                0.00       
+COMPLEXITY      51.85                51.85                0.00       
+METHOD          93.33                93.33                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          41.67                41.67                0.00       
+INSTRUCTION     84.47                84.47                0.00       
+LINE            88.57                88.57                0.00       
+COMPLEXITY      51.85                51.85                0.00       
+METHOD          93.33                93.33                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                100.00               50.00      
+INSTRUCTION     68.57                91.43                22.86      
+LINE            60.00                90.00                30.00      
+COMPLEXITY      12.50                87.50                75.00      
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          100.00               100.00               0.00       
+INSTRUCTION     74.29                74.29                0.00       
+LINE            70.00                70.00                0.00       
+COMPLEXITY      57.14                57.14                0.00       
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          75.00                75.00                0.00       
+INSTRUCTION     80.56                80.56                0.00       
+LINE            62.50                62.50                0.00       
+COMPLEXITY      57.14                57.14                0.00       
+METHOD          60.00                60.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          37.50                75.00                37.50      
+INSTRUCTION     57.14                78.57                21.43      
+LINE            56.25                81.25                25.00      
+COMPLEXITY      40.00                80.00                40.00      
+METHOD          66.67                100.00               33.33      
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                75.00                25.00      
+INSTRUCTION     82.50                87.50                5.00       
+LINE            77.78                88.89                11.11      
+COMPLEXITY      57.14                71.43                14.29      
+METHOD          80.00                80.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          80.00                90.00                10.00      
+INSTRUCTION     88.61                88.61                0.00       
+LINE            93.33                93.33                0.00       
+COMPLEXITY      70.00                80.00                10.00      
+METHOD          80.00                80.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                85.71                35.71      
+INSTRUCTION     78.48                97.47                18.99      
+LINE            72.22                94.44                22.22      
+COMPLEXITY      38.46                84.62                46.15      
+METHOD          83.33                100.00               16.67      
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                91.67                41.67      
+INSTRUCTION     68.57                91.43                22.86      
+LINE            60.00                90.00                30.00      
+COMPLEXITY      12.50                75.00                62.50      
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          100.00               100.00               0.00       
+INSTRUCTION     74.29                74.29                0.00       
+LINE            70.00                70.00                0.00       
+COMPLEXITY      57.14                57.14                0.00       
+METHOD          50.00                50.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          75.00                100.00               25.00      
+INSTRUCTION     80.56                91.67                11.11      
+LINE            62.50                87.50                25.00      
+COMPLEXITY      57.14                85.71                28.57      
+METHOD          60.00                80.00                20.00      
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          37.50                37.50                0.00       
+INSTRUCTION     57.14                57.14                0.00       
+LINE            56.25                56.25                0.00       
+COMPLEXITY      40.00                40.00                0.00       
+METHOD          66.67                66.67                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                100.00               50.00      
+INSTRUCTION     82.50                87.50                5.00       
+LINE            77.78                88.89                11.11      
+COMPLEXITY      57.14                85.71                28.57      
+METHOD          80.00                80.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          80.00                80.00                0.00       
+INSTRUCTION     88.61                88.61                0.00       
+LINE            93.33                93.33                0.00       
+COMPLEXITY      70.00                70.00                0.00       
+METHOD          80.00                80.00                0.00       
+CLASS           100.00               100.00               0.00       
+Metric          Initial C (%)        Generated C (%)      Diff (%)   
+BRANCH          50.00                50.00                0.00       
+INSTRUCTION     78.48                78.48                0.00       
+LINE            72.22                72.22                0.00       
+COMPLEXITY      38.46                38.46                0.00       
+METHOD          83.33                83.33                0.00       
+CLASS           100.00               100.00               0.00       

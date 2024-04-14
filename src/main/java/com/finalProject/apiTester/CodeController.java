@@ -13,7 +13,6 @@ public class CodeController {
     @PostMapping("/submit_gpt")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<String> submitCode(@RequestBody CodeSubmission submission) {
-        // Placeholder: process the code, run JaCoCo, call OpenAI API
         System.out.println(submission.toString());
         String response = CompileCode.startCompile(submission);
         System.out.println(response);
@@ -24,7 +23,6 @@ public class CodeController {
     @PostMapping("/submit_llama")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<String> submitCodeLlama(@RequestBody CodeSubmission submission) {
-        // Placeholder: process the code, run JaCoCo, call OpenAI API
         System.out.println(submission.toString());
         String response = LlamaCompile.startCompile(submission);
         cleanAllFiles();

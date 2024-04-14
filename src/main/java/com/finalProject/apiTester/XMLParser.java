@@ -55,7 +55,7 @@ public class XMLParser {
         return null;
     }
 
-    public static Map<String, Double> writeCoveragePercentagesToFile() {
+    public static Map<String, Double> getCoveragePercentage() {
         try {
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -76,7 +76,9 @@ public class XMLParser {
                     coveragePercentages.put(type, percentage);
                 }
             }
-
+//            System.out.println("Coverage Percentages: " + coveragePercentages);
+            System.out.println("Line Coverage: " + coveragePercentages.get("LINE"));
+            System.out.println("It did get the coverage percentages!");
             return coveragePercentages;
 
         } catch (Exception e) {

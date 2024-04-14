@@ -5,10 +5,7 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -47,7 +44,7 @@ public class CoverageComparisonWriter {
     }
 
 
-    public static void appendCoverageComparisonToCSVFile(Map<String, Double> coveragePercentages1, Map<String, Double> coveragePercentages2, String className) {
+    public static void appendCoverageComparisonToCSVFile(Map<String, Double> coveragePercentages1, Map<String, Double> coveragePercentages2, String className, String LLM) {
         String outputPath = "C:\\Users\\Antonio\\Downloads\\apiTester\\coveragePercentages.csv";
         File file = new File(outputPath);
 
@@ -56,8 +53,16 @@ public class CoverageComparisonWriter {
         StringBuilder dataLine = new StringBuilder();
         String classNameHeader = "ClassName";
         headerMap.put(classNameHeader, className);
+        int lineCount = countLines(className);
+        headerMap.put("LineCount", String.valueOf(lineCount));
+        headerMap.put("LLM", LLM);
+
         // Iterate over the keys to build the header and data line
         dataLine.append(className);
+        dataLine.append(",");
+        dataLine.append(lineCount);
+        dataLine.append(",");
+        dataLine.append(LLM);
         for (String key : coveragePercentages1.keySet()) {
             double coverage1 = coveragePercentages1.getOrDefault(key, 0.0);
             double coverage2 = coveragePercentages2.getOrDefault(key, 0.0);
@@ -91,6 +96,23 @@ public class CoverageComparisonWriter {
             e.printStackTrace();
         }
     }
+
+    public static int countLines(String className) {
+        String classFilePath = "C:\\Users\\Antonio\\Downloads\\apiTester\\src\\main\\java\\temp\\" + className + ".java";
+        int lines = 0;
+        File file = new File(classFilePath);
+        System.out.println("File path: " + file.getAbsolutePath());
+        System.out.println("File exists: " + file.exists());
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            while (reader.readLine() != null) lines++;
+        } catch (IOException e) {
+            System.err.println("An error occurred while reading the file: " + e.getMessage());
+            return -1; // Return -1 or any error indicator of your choice
+        }
+
+        return lines;
+    }
+
 
     public static String getClassNameFromXML() {
         try {
