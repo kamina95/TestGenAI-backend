@@ -21,21 +21,42 @@ public class CompileCode {
     private static String errorMessage;
 
 
-    public static String startCompile(CodeSubmission codeSubmission) {
+    public static String startCompile(CodeSubmission codeSubmission){
         classCode = codeSubmission.getCode();
         testCode = codeSubmission.getTests();
+        int noImprovementCount = 0;
+        try {
+            writeCodeToFile(getClassName(classCode), classCode);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         String response = tryCompileCode();
         Map<String, Double> initialcoveragePercentages = getCoveragePercentage();
+        Double initialLineCoverage = XMLParser.getLineCoverage();
         if(response.equals("success")){
             String className = getClassNameFromXML();
             System.out.println("calling python");
             callPython("FirstAssistant");
             response = tryCompileCode();
             if(response.equals("success")){
-                Map<String, Double> generatedCoveragePercentages = getCoveragePercentage();
+                Double tempLineCoverage = initialLineCoverage;
+
                 assert initialcoveragePercentages != null;
+
+                while((tempLineCoverage == XMLParser.getLineCoverage() || noImprovementCount < 2) && tempLineCoverage < 99){
+                    if(tempLineCoverage == XMLParser.getLineCoverage()) noImprovementCount++;
+                    else noImprovementCount = 0;
+                    callPython("moreTestsAssistant");
+                    response = tryCompileCode();
+                    if(!response.equals("success")){
+                        break;
+                    }
+                    tempLineCoverage = XMLParser.getLineCoverage();
+                }
+                Map<String, Double> generatedCoveragePercentages = getCoveragePercentage();
                 CoverageComparisonWriter.appendCoverageComparisonToFile(initialcoveragePercentages, generatedCoveragePercentages);
                 CoverageComparisonWriter.appendCoverageComparisonToCSVFile(initialcoveragePercentages, generatedCoveragePercentages, className, "GPT-4");
+
                 return testCode;
             }else {
                 System.out.println("error");
@@ -63,7 +84,7 @@ public class CompileCode {
 
     public static String tryCompileCode() {
         try{
-            writeCodeToFile(getClassName(classCode), classCode);
+//            writeCodeToFile(getClassName(classCode), classCode);
             writeTestToFile(getClassName(testCode), testCode);
 //            ProcessBuilder testBuilder = new ProcessBuilder("C:\\Program Files\\apache-maven-3.9.5\\bin\\mvn.cmd", "test", "-Dtest=" + getClassName(testCode));
             ProcessBuilder testBuilder = new ProcessBuilder("C:\\Program Files\\apache-maven-3.9.5\\bin\\mvn.cmd", "test");
@@ -99,48 +120,13 @@ public class CompileCode {
     }
 
 
-    private static String determineErrorType(String output) {
-        if (output.contains("COMPILATION ERROR")) {
-            return "CompilationError";
-        } else if (output.contains("There are test failures")) {
-            return "TestsFailedError";
-        } else if (output.contains("Could not find or load main class")) {
-            return "ClassNotFoundError";
-        } else if (output.contains("BUILD FAILURE")) {
-            return "BuildFailureError";
-        } else if (output.contains("Failed to execute goal")) {
-            if (output.contains("SurefireReport")) {
-                return "SurefireReportError";
-            }
-            return "ExecutionGoalFailure";
-        } else if (output.contains("Non-resolvable parent POM")) {
-            return "ParentPomNotFoundError";
-        } else if (output.contains("Plugin execution not covered by lifecycle configuration")) {
-            return "LifecycleConfigurationError";
-        } else if (output.contains("Project dependencies could not be resolved")) {
-            return "DependenciesResolutionError";
-        } else if (output.contains("No tests were executed")) {
-            return "NoTestsExecutedError";
-        } else if (output.contains("The forked VM terminated without saying properly goodbye")) {
-            return "VMCrashError";
-        } else if (output.contains("NullPointerException")) {
-            return "NullPointerException";
-        } else if (output.contains("ArrayIndexOutOfBoundsException")) {
-            return "ArrayIndexOutOfBoundsException";
-        } else if (output.contains("IllegalArgumentException")) {
-            return "IllegalArgumentException";
-        } else if (output.contains("RuntimeException")) {
-            return "RuntimeExceptionError";
-        } else {
-            return "UnknownError";
-        }
-    }
-
-
     public static void callPython(String assistantName){
+        if (classCode == null) {
+            throw new IllegalArgumentException("Class code cannot be null");
+        }
         ArrayList<String> linesNotCovered = XMLParser.parseXML();
         getCoveragePercentage();
-        for(String line: linesNotCovered){
+        for (String line: linesNotCovered) {
             System.out.println(line);
         }
         testCode =  PythonExecutor.execute(classCode, linesNotCovered, assistantName);
@@ -153,9 +139,25 @@ public class CompileCode {
     }
 
 
+
+//    public static void callPython(String assistantName){
+//        ArrayList<String> linesNotCovered = XMLParser.parseXML();
+//        getCoveragePercentage();
+//        for(String line: linesNotCovered){
+//            System.out.println(line);
+//        }
+//        testCode =  PythonExecutor.execute(classCode, linesNotCovered, assistantName);
+//        try {
+//            assert testCode != null;
+//            writeTestToFile(getClassName(testCode), testCode);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+
     public static String getClassName(String code){
         String[] codeArr = code.split("[\\n\\s]+");
-
         for(int i = 0; i < codeArr.length - 2; i++){
             if(codeArr[i].equals("public") && codeArr[i + 1].equals("class")){
                 return codeArr[i+2];
@@ -223,5 +225,6 @@ public class CompileCode {
         }
 
     }
+
 
 }

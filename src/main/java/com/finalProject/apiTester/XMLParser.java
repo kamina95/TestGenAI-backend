@@ -88,5 +88,38 @@ public class XMLParser {
         return null;
     }
 
+    public static Double getLineCoverage() {
+        try {
+
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(new File("C:\\Users\\Antonio\\Downloads\\apiTester\\target\\site\\jacoco\\jacoco.xml"));
+
+            NodeList counterList = document.getElementsByTagName("counter");
+            Map<String, Double> coveragePercentages = new HashMap<>();
+            for (int i = 0; i < counterList.getLength(); i++) {
+                Node counterNode = counterList.item(i);
+                if (counterNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element counterElement = (Element) counterNode;
+                    String type = counterElement.getAttribute("type");
+                    int covered = Integer.parseInt(counterElement.getAttribute("covered"));
+                    int missed = Integer.parseInt(counterElement.getAttribute("missed"));
+                    double percentage = (double) covered / (covered + missed) * 100;
+                    coveragePercentages.put(type, percentage);
+                }
+            }
+//            System.out.println("Coverage Percentages: " + coveragePercentages);
+            System.out.println("Line Coverage: " + coveragePercentages.get("LINE"));
+            System.out.println("It did get the coverage percentages!");
+            return coveragePercentages.get("LINE");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
 }

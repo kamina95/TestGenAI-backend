@@ -93,8 +93,12 @@
             <version>2.1.0</version>
         </dependency>
 
-
-
+        <!-- https://mvnrepository.com/artifact/software.amazon.event.ruler/event-ruler -->
+        <dependency>
+            <groupId>software.amazon.event.ruler</groupId>
+            <artifactId>event-ruler</artifactId>
+            <version>1.7.3</version>
+        </dependency>
 
     </dependencies>
 

@@ -16,7 +16,7 @@ public class CodeController {
         System.out.println(submission.toString());
         String response = CompileCode.startCompile(submission);
         System.out.println(response);
-        cleanAllFiles();
+//        cleanAllFiles();
         return ResponseEntity.ok(response);
     }
 
